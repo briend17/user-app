@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nombres',
+        'apellidos',
+        'direccion',
+        'cedula',
+        'celular',
+        'categoria_id',
+        'pais_id',
     ];
 
     /**
@@ -41,4 +48,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class);
+    }
 }

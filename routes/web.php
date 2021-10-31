@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,12 +25,11 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth','verified'])->group(function(){
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-    Route::get('/categorias', function () {
-        return Inertia::render('Category');
-    })->name('categorias');
+    // Route::get('/dashboard', function () {
+    //     return Inertia::render('Dashboard');
+    // })->name('dashboard');
+    Route::resource('dashboard',UserController::class);
+    Route::get('/categorias', [CategoriaController::class,'index'])->name('categorias');
 });
 
 require __DIR__.'/auth.php';
