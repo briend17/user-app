@@ -2,7 +2,7 @@
 
 # User App
 <p>
-    Proyecto realizado para cumplir el ciclo básico de registro de usuarios (CRUD), donde el administrador pueda ingresar, realizar operaciones CRUD con los usuarios, el usuario registrado recibirá un mail de bienvenida, de igual forma el administrador recibirá un mail con el onteo de usuarios por país.
+    Proyecto realizado para cumplir el ciclo básico de registro de usuarios (CRUD), donde el administrador pueda ingresar, realizar operaciones CRUD con los usuarios, el usuario registrado recibirá un mail de bienvenida, de igual forma el administrador recibirá un mail con el conteo de usuarios por país.
 </p>
 
 ## Disposición técnica
@@ -26,6 +26,7 @@
             <li>composer install</li>
             <li>npm install && npm run dev</li>
             <li>php artisan key:generate</li>
+            <li>Configurar Base de datos en archivo .env</li>
             <li>php artisan migrate --seed</li>
         </ul>
      </li>
@@ -33,6 +34,10 @@
 
 ## Configuración email
     Para el correcto funcionaminto del envío de emails, es necesario configurar las variable de entorno correspondientes de acuerdo al driver de su preferencia, para las pruebas se utilizó mailtrap.
+Finalizada la configuración: php artisan config:cache
+
+Parámetro de configuración email de administrador:
+Para esta configuración se debe modificar el usuario con perfil de administrador, ya que ese email es el utilizado para enviar el mail de usuarios por pais.
 
 ## Credenciales de acceso
 
