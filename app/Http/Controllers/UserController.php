@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Events\UserRegistered;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Categoria;
 use App\Models\Pais;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,9 +23,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with(['pais'])->get();
+        $users = User::with(['pais','categoria'])->orderBy('id','ASC')->get();
         $pais = Pais::all();
-        //dd($pais);
+        //dd(User::getEmailAdmin());
         return Inertia::render('User/Index',compact('users'));
     }
 
@@ -34,7 +36,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('User/Create');
+        $pais = Pais::all();
+        $categorias = Categoria::all();
+
+        return Inertia::render('User/Create',compact('pais','categorias'));
     }
 
     /**
@@ -45,13 +50,15 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            DB::beginTransaction();
+                $user = User::create($request->all());
+                event(new UserRegistered($user));
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+        }
 
-        event(new UserRegistered($user));
         return Redirect::route('dashboard.index');
     }
 
@@ -65,7 +72,9 @@ class UserController extends Controller
     public function edit(User $dashboard)
     {
         $user = $dashboard;
-        return Inertia::render('User/Edit',compact('user'));
+        $pais = Pais::all();
+        $categorias = Categoria::all();
+        return Inertia::render('User/Edit',compact('user','pais','categorias'));
     }
 
     /**
@@ -77,7 +86,13 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $dashboard)
     {
-        $dashboard->update($request->all());
+        try {
+            DB::beginTransaction();
+                $dashboard->update($request->all());
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+        }
         return Redirect::route('dashboard.index');
     }
 
@@ -89,7 +104,13 @@ class UserController extends Controller
      */
     public function destroy(User $dashboard)
     {
-        $dashboard->delete();
+        try {
+            DB::beginTransaction();
+                $dashboard->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+        }
         return Redirect::route('dashboard.index');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\UserRegistered;
+use App\Models\Pais;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
@@ -17,8 +19,9 @@ class SendEmailNotificationAdmin
      */
     public function handle(UserRegistered $event)
     {
-        $user = $event->user;
-        Mail::send('emails.user_registered_country',['data' => $user], function($message) use($user){
+        $user = User::getUserAdmin();
+        $pais = Pais::with(['user'])->get();
+        Mail::send('emails.user_registered_country',['pais' => $pais], function($message) use($user){
             $message->to($user->email,$user->name)->subject('Usuarios registrados en user-app');
         });
     }

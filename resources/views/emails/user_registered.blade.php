@@ -12,7 +12,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-       
+
     </head>
     <body class="font-sans antialiased">
         <h2>Registro satisactorio</h2>

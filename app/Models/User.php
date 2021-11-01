@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +18,7 @@ class User extends Authenticatable
      *
      * @var string[]
      */
+    protected $appends = ['display_name'];
     protected $fillable = [
         'name',
         'email',
@@ -49,8 +51,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public static function getUserAdmin()
+    {
+        $user = User::where('profile','Administrador')->first();
+        return $user;
+    }
+
+    public function getDisplayNameAttribute()
+    {
+        return $this->nombres.' '.$this->apellidos;
+    }
+
     public function pais()
     {
         return $this->belongsTo(Pais::class);
+    }
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
     }
 }
