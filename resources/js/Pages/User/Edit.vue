@@ -19,44 +19,50 @@
                     <form @submit.prevent="submit">
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             <div>
-                                <Label for="names" value="Nombres" />
-                                <Input id="names" type="text" class="mt-1 block w-full" v-model="form.names" required autofocus />
+                                <Label for="nombres" value="Nombres" />
+                                <Input @paste.prevent  id="nombres" type="text" class="mt-1 block w-full" v-model="form.nombres" required autofocus />
                             </div>
                             <div>
-                                <Label for="surnames" value="Apellidos" />
-                                <Input id="surnames" type="text" class="mt-1 block w-full" v-model="form.surnames" required />
+                                <Label for="apellidos" value="Apellidos" />
+                                <Input @paste.prevent  id="apellidos" type="text" class="mt-1 block w-full" v-model="form.apellidos" required />
                             </div>
                             <div>
-                                <Label for="identity_number" value="Cédula" />
-                                <Input id="identity_number" type="number" class="mt-1 block w-full" v-model="form.identity_number" required />
+                                <Label for="cedula" value="Cédula" />
+                                <Input @paste.prevent  id="cedula" @keydown="validaCampoNumerico($event)" @keydown.space.prevent type="number" class="mt-1 block w-full" v-model="form.cedula" required />
                             </div>
                             <div class="">
                                 <Label for="email" value="Email" />
-                                <Input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
+                                <Input @paste.prevent  id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
                             </div>
 
                             <div>
                                 <Label for="pais_id" value="País" />
-                                <Input id="pais_id" type="text" class="mt-1 block w-full" v-model="form.pais_id" required />
+                                 <select id="pais_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" v-model="form.pais_id" required>
+                                    <option value="">Seleccione</option>
+                                    <option v-for="item in pais" :value="item.id" :key="item.id">{{ item.nombre }}</option>
+                                </select>
                             </div>
                             <div>
-                                <Label for="direction" value="Dirección" />
-                                <Input id="direction" type="text" class="mt-1 block w-full" v-model="form.direction" required />
+                                <Label for="direccion" value="Dirección" />
+                                <Input @paste.prevent  id="direccion" type="text" class="mt-1 block w-full" v-model="form.direccion" required />
                             </div>
                             <div>
-                                <Label for="phone_number" value="Celular" />
-                                <Input id="phone_number" type="number" class="mt-1 block w-full" v-model="form.phone_number" required />
+                                <Label for="celular" value="Celular" />
+                                <Input @paste.prevent  id="celular" @keydown="validaCampoNumerico($event)" @keydown.space.prevent type="number" class="mt-1 block w-full" v-model="form.celular" required />
                             </div>
                             <div>
                                 <Label for="categoria_id" value="Categoría" />
-                                <Input id="categoria_id" type="text" class="mt-1 block w-full" v-model="form.categoria_id" required />
+                                <select id="categoria_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" v-model="form.categoria_id" required>
+                                    <option value="">Seleccione</option>
+                                    <option v-for="item in categorias" :value="item.id" :key="item.id">{{ item.nombre }}</option>
+                                </select>
                             </div>
                         </div>
-                            <div class="flex items-center justify-end my-3">
-                                <Button class="ml-4 bg-green-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    Actualizar usuario
-                                </Button>
-                            </div>
+                        <div class="flex items-center justify-end my-3">
+                            <Button class="ml-4 bg-green-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                Actualizar usuario
+                            </Button>
+                        </div>
                     </form>
                  </div>
 
@@ -76,7 +82,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia'
 
 export default {
-    props:['user'],
+    props:['user','pais','categorias'],
     components: {
         Button,
         Input,
@@ -91,11 +97,11 @@ export default {
         return {
             form: this.$inertia.form({
                 email: this.user.email,
-                names: this.user.nombres,
-                surnames: this.user.apellidos,
-                direction: this.user.direccion,
-                identity_number: this.user.cedula,
-                phone_number: this.user.celular,
+                nombres: this.user.nombres,
+                apellidos: this.user.apellidos,
+                direccion: this.user.direccion,
+                cedula: this.user.cedula,
+                celular: this.user.celular,
                 categoria_id: this.user.categoria_id,
                 pais_id: this.user.pais_id,
             })
@@ -107,7 +113,14 @@ export default {
             this.form.put(this.route('dashboard.update',{dashboard:this.user.id}), {
                 onFinish: () => {},
             })
-        }
+        },
+        validaCampoNumerico(event){
+            let  tecla = event.key;
+
+            if(tecla == '.' || tecla == ','  || tecla == '-' || tecla == '+' || tecla == 'e' || tecla == 'E'){
+                event.preventDefault();
+            }
+        },
     },
 }
 </script>

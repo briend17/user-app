@@ -9,4 +9,9 @@ class Pais extends Model
      protected $fillable = [
         'nombre'
     ];
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

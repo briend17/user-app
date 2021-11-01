@@ -12,17 +12,12 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
- <!-- Scripts -->
-        
-        <script src="{{ mix('js/app.js') }}" defer></script>
+
     </head>
     <body class="font-sans antialiased">
-        <h1>Usuarios registrads por país</h1>
+        <h3>Usuarios registrados por país</h3>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    Listado de usuarios por país
-                </div>
                 <div class="flex items-top justify-center my-4 sm:pt-0 w-full">
                     <div class="w-4/5">
                     <table class="text-left w-1/2">
@@ -33,10 +28,16 @@
                             </tr>
                         </thead>
                         <tbody class="bg-grey-light w-full">
+                            @forelse($pais as $item)
                             <tr class="flex w-full hover:bg-gray-300">
-                                <td class="p-2">&nbsp;</td>
-                                <td class="p-2">&nbsp;</td>
+                                <td class="p-2">{{ $item->nombre }}</td>
+                                <td class="p-2">{{ $item->user()->count() }}</td>
                             </tr>
+                            @empty
+                                <tr class="flex w-full hover:bg-gray-300">
+                                    <td class="p-2" style="text-align: center;" colspan="2">No hay datos para mostrar.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

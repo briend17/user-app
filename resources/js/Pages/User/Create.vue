@@ -17,39 +17,45 @@
                  <ValidationErrors />
                  <div class="px-10 mb-4">
                     <form @submit.prevent="submit">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             <div>
                                 <Label for="nombres" value="Nombres" />
-                                <Input id="nombres" type="text" class="mt-1 block w-full" v-model="form.nombres" required autofocus />
+                                <Input @paste.prevent  id="nombres" type="text" class="mt-1 block w-full" v-model="form.nombres" required autofocus />
                             </div>
                             <div>
                                 <Label for="apellidos" value="Apellidos" />
-                                <Input id="apellidos" type="text" class="mt-1 block w-full" v-model="form.apellidos" required />
+                                <Input @paste.prevent  id="apellidos" type="text" class="mt-1 block w-full" v-model="form.apellidos" required />
                             </div>
                             <div>
                                 <Label for="cedula" value="Cédula" />
-                                <Input id="cedula" type="number" class="mt-1 block w-full" v-model="form.cedula" required />
+                                <Input @paste.prevent  id="cedula" @keydown="validaCampoNumerico($event)" @keydown.space.prevent type="number" class="mt-1 block w-full" v-model="form.cedula" required />
                             </div>
                             <div class="">
                                 <Label for="email" value="Email" />
-                                <Input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
+                                <Input @paste.prevent  id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
                             </div>
 
                             <div>
                                 <Label for="pais_id" value="País" />
-                                <Input id="pais_id" type="text" class="mt-1 block w-full" v-model="form.pais_id" required />
+                                 <select id="pais_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" v-model="form.pais_id" required>
+                                    <option value="">Seleccione</option>
+                                    <option v-for="item in pais" :value="item.id" :key="item.id">{{ item.nombre }}</option>
+                                </select>
                             </div>
                             <div>
                                 <Label for="direccion" value="Dirección" />
-                                <Input id="direccion" type="text" class="mt-1 block w-full" v-model="form.direccion" required />
+                                <Input @paste.prevent  id="direccion" type="text" class="mt-1 block w-full" v-model="form.direccion" required />
                             </div>
                             <div>
-                                <Label for="cedula" value="Celular" />
-                                <Input id="cedula" type="number" class="mt-1 block w-full" v-model="form.cedula" required />
+                                <Label for="celular" value="Celular" />
+                                <Input @paste.prevent  id="celular" @keydown="validaCampoNumerico($event)" @keydown.space.prevent type="number" pattern="^[0-9]" class="mt-1 block w-full" v-model="form.celular" required />
                             </div>
                             <div>
                                 <Label for="categoria_id" value="Categoría" />
-                                <Input id="categoria_id" type="text" class="mt-1 block w-full" v-model="form.categoria_id" required />
+                                <select id="categoria_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" v-model="form.categoria_id" required>
+                                    <option value="">Seleccione</option>
+                                    <option v-for="item in categorias" :value="item.id" :key="item.id">{{ item.nombre }}</option>
+                                </select>
                             </div>
                         </div>
 
@@ -76,6 +82,7 @@ import ValidationErrors from '@/Components/ValidationErrors.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 
 export default {
+    props:['pais','categorias'],
     components: {
         Button,
         Input,
@@ -89,15 +96,12 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                name: '',
                 email: '',
-                password: '',
-                password_confirmation: '',
-                names: '',
+                nombres: '',
                 apellidos: '',
                 direccion: '',
                 cedula: '',
-                cedula: '',
+                celular: '',
                 categoria_id: '',
                 pais_id: '',
             })
@@ -109,7 +113,14 @@ export default {
             this.form.post(this.route('dashboard.store'), {
                 onFinish: () => {},
             })
-        }
+        },
+        validaCampoNumerico(event){
+            let  tecla = event.key;
+
+            if(tecla == '.' || tecla == ','  || tecla == '-' || tecla == '+' || tecla == 'e' || tecla == 'E'){
+                event.preventDefault();
+            }
+        },
     }
 }
 </script>
